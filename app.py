@@ -17,15 +17,24 @@ from matplotlib import font_manager as fm
 st.set_page_config(page_title="PCOS Check", page_icon="🩺", layout="centered")
 BURGUNDY = "#6B1F3B"
 
-for fp in ["/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-           "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"]:
-    if os.path.exists(fp):
-        try:
-            fm.fontManager.addfont(fp)
-            plt.rcParams["font.family"] = fm.FontProperties(fname=fp).get_name()
-        except Exception:
-            pass
-        break
+import glob
+def _setup_korean_font():
+    # 배포 환경(packages.txt로 fonts-nanum 설치) 및 로컬 모두 대응
+    candidates = []
+    candidates += glob.glob("/usr/share/fonts/truetype/nanum/*.ttf")
+    candidates += glob.glob("/usr/share/fonts/**/NanumGothic*.ttf", recursive=True)
+    candidates += ["/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"]
+    for fp in candidates:
+        if os.path.exists(fp):
+            try:
+                fm.fontManager.addfont(fp)
+                name = fm.FontProperties(fname=fp).get_name()
+                plt.rcParams["font.family"] = name
+                return name
+            except Exception:
+                continue
+    return None
+_setup_korean_font()
 plt.rcParams["axes.unicode_minus"] = False
 
 @st.cache_resource
@@ -146,7 +155,8 @@ if submitted:
         colors = [BURGUNDY if v>0 else "#2E86DE" for v in vals]
         fig,ax = plt.subplots(figsize=(6.5,3.6))
         ax.barh(range(len(vals))[::-1], vals, color=colors)
-        ax.set_yticks(range(len(vals))[::-1]); ax.set_yticklabels(labels, fontsize=10)
+        ax.set_yticks(range(len(vals))[::-1])
+        ax.set_yticklabels(labels, fontsize=10)
         ax.axvline(0, color="#888", lw=0.8)
         ax.set_xlabel("← 위험 낮춤    |    위험 높임 →", fontsize=9)
         for s in ["top","right"]: ax.spines[s].set_visible(False)
