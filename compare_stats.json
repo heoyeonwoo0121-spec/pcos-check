@@ -1,0 +1,26 @@
+{
+  "BMI": {
+    "ko": "BMI",
+    "overall": 24.3,
+    "pcos": 25.5,
+    "nonpcos": 23.7
+  },
+  "Age (yrs)": {
+    "ko": "나이",
+    "overall": 31.4,
+    "pcos": 30.1,
+    "nonpcos": 32.1
+  },
+  "Weight (Kg)": {
+    "ko": "체중",
+    "overall": 59.6,
+    "pcos": 63.0,
+    "nonpcos": 58.0
+  },
+  "Cycle length(days)": {
+    "ko": "생리주기 길이",
+    "overall": 4.9,
+    "pcos": 4.6,
+    "nonpcos": 5.1
+  }
+}
